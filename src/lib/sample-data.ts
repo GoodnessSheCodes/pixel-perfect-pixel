@@ -24,7 +24,7 @@ const REVIEWS: Record<(typeof CATEGORIES)[number], string[]> = {
     "The camera produces vibrant, sharp photos even in low light. Flawless so far.",
     "It works, but the plastic smelled strongly for days and the buttons feel mediocre.",
     "Exceptional craftsmanship on this wooden chair. Sturdy and elegant.",
-    "Stopped working after three weeks. Customer for life? Definitely not.",
+    "Stopped working after three weeks. Really disappointing for a brand I used to trust.",
     "The towels are thick and absorbent. Very pleased with them.",
     "Charger gets dangerously hot. I am worried about using it overnight.",
   ],

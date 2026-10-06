@@ -106,8 +106,9 @@ export function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[’']/g, "")
-    .replace(/[^a-z0-9\s!?]/g, " ")
-    .replace(/([!?])/g, " $1 ")
+    .replace(/[^a-z0-9\s!?.;:]/g, " ")
+    .replace(/[;:]/g, ".")
+    .replace(/([!?.])/g, " $1 ")
     .split(/\s+/)
     .filter(Boolean);
 }
@@ -118,7 +119,7 @@ function normalize(sum: number, alpha = 15) {
 
 export function analyzeText(text: string): AnalysisResult {
   const tokens = tokenize(text);
-  const words = tokens.filter((t) => t !== "!" && t !== "?");
+  const words = tokens.map((t) => (t === "!" || t === "?" ? "." : t)).filter((t, i, a) => t !== "." || a[i - 1] !== ".");
   const exclaims = Math.min(tokens.filter((t) => t === "!").length, 3);
   const hits: TokenHit[] = [];
   const contributions: number[] = [];
@@ -146,7 +147,9 @@ export function analyzeText(text: string): AnalysisResult {
     if (base === undefined || base === 0) continue;
     let v = base;
     let negated = false;
-    const prev = words.slice(Math.max(0, i - 3), i);
+    let prev = words.slice(Math.max(0, i - 3), i);
+    const stop = prev.lastIndexOf(".");
+    if (stop >= 0) prev = prev.slice(stop + 1);
     // intensifier / diminisher directly before
     const p1 = words[i - 1];
     if (p1 && INTENSIFIERS[p1]) v *= INTENSIFIERS[p1];
@@ -188,7 +191,7 @@ export function analyzeText(text: string): AnalysisResult {
     confidence,
     hits,
     keywords,
-    tokenCount: words.length,
+    tokenCount: words.filter((w) => w !== ".").length,
     explanation: explain(label, score, hits, butIndex >= 0, exclaims),
   };
 }
