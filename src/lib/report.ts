@@ -3,7 +3,7 @@ import { byCategory, byMonth, fmtScore, summarize, topSentimentWords, topThemes,
 export interface ReportSection {
   title: string;
   paragraphs: string[];
-  bullets?: string[];
+  bullets?: string[] | undefined;
 }
 
 const list = (xs: string[]) => (xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`);
@@ -23,12 +23,12 @@ export function generateReport(records: AnalyzedRecord[]): ReportSection[] {
     ["positive", s.positive],
     ["neutral", s.neutral],
     ["negative", s.negative],
-  ].sort((a, b) => (b[1] as number) - (a[1] as number))[0][0] as string;
+  ].sort((a, b) => (b[1] as number) - (a[1] as number))[0]![0] as string;
   const tone = s.avgScore >= 0.1 ? "moderately positive" : s.avgScore <= -0.1 ? "moderately negative" : "broadly balanced";
   const tone2 = s.avgScore >= 0.35 ? "clearly positive" : s.avgScore <= -0.35 ? "clearly negative" : tone;
-  const best = [...cats].sort((a, b) => b.avgScore - a.avgScore)[0];
-  const worst = [...cats].sort((a, b) => a.avgScore - b.avgScore)[0];
-  const mostNeg = [...cats].sort((a, b) => b.pctNegative - a.pctNegative)[0];
+  const best = [...cats].sort((a, b) => b.avgScore - a.avgScore)[0]!;
+  const worst = [...cats].sort((a, b) => a.avgScore - b.avgScore)[0]!;
+  const mostNeg = [...cats].sort((a, b) => b.pctNegative - a.pctNegative)[0]!;
   const ratio = s.negative ? (s.positive / s.negative).toFixed(2) : "∞";
 
   const sections: ReportSection[] = [];
@@ -99,11 +99,11 @@ export function generateReport(records: AnalyzedRecord[]): ReportSection[] {
   });
 
   if (months.length >= 2) {
-    const first = months[0];
-    const last = months[months.length - 1];
+    const first = months[0]!;
+    const last = months[months.length - 1]!;
     const diff = Math.round((last.avgScore - first.avgScore) * 100) / 100;
-    const peak = [...months].sort((a, b) => b.avgScore - a.avgScore)[0];
-    const low = [...months].sort((a, b) => a.avgScore - b.avgScore)[0];
+    const peak = [...months].sort((a, b) => b.avgScore - a.avgScore)[0]!;
+    const low = [...months].sort((a, b) => a.avgScore - b.avgScore)[0]!;
     sections.push({
       title: "Trends",
       paragraphs: [

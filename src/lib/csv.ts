@@ -38,7 +38,7 @@ const TEXT_NAMES = ["text", "review", "comment", "content", "feedback", "message
 export function extractRows(input: string) {
   const rows = parseCSV(input);
   if (rows.length < 2) throw new Error("The file needs a header row and at least one data row.");
-  const header = rows[0].map((h) => h.trim().toLowerCase());
+  const header = rows[0]!.map((h) => h.trim().toLowerCase());
   let textIdx = header.findIndex((h) => TEXT_NAMES.includes(h));
   if (textIdx < 0) {
     // fall back to the column with the longest average content
@@ -56,5 +56,5 @@ export function extractRows(input: string) {
     }))
     .filter((r) => r.text.length > 0);
   if (!data.length) throw new Error("No text was found in the detected text column.");
-  return { rows: data.slice(0, 2000), textColumn: rows[0][textIdx], truncated: data.length > 2000 };
+  return { rows: data.slice(0, 2000), textColumn: rows[0]![textIdx] ?? "text", truncated: data.length > 2000 };
 }

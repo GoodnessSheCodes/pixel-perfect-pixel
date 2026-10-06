@@ -23,7 +23,7 @@ export function percentages(counts: number[], decimals = 1): number[] {
   const order = raw.map((r, i) => [r - Math.floor(r), i] as const).sort((a, b) => b[0] - a[0]);
   for (const [, i] of order) {
     if (rem <= 0) break;
-    floored[i] += 1;
+    floored[i] = floored[i]! + 1;
     rem--;
   }
   return floored.map((v) => v / f);
@@ -36,12 +36,12 @@ export function summarize(records: AnalyzedRecord[]) {
   const avgConfidence = records.length ? records.reduce((a, r) => a + r.result.confidence, 0) / records.length : 0;
   return {
     total: records.length,
-    positive: counts[0],
-    neutral: counts[1],
-    negative: counts[2],
-    pctPositive: pct[0],
-    pctNeutral: pct[1],
-    pctNegative: pct[2],
+    positive: counts[0]!,
+    neutral: counts[1]!,
+    negative: counts[2]!,
+    pctPositive: pct[0]!,
+    pctNeutral: pct[1]!,
+    pctNegative: pct[2]!,
     avgScore: Math.round(avg * 100) / 100,
     avgConfidence: Math.round(avgConfidence),
   };

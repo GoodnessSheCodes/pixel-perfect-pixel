@@ -142,7 +142,7 @@ export function analyzeText(text: string): AnalysisResult {
 
   for (let i = 0; i < words.length; i++) {
     if (consumed.has(i)) continue;
-    const w = words[i];
+    const w = words[i]!;
     const base = LEXICON[w];
     if (base === undefined || base === 0) continue;
     let v = base;
