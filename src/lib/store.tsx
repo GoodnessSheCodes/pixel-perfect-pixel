@@ -16,7 +16,7 @@ interface Ctx {
   includeSample: boolean;
   sampleCount: number;
   addManual: (text: string) => AnalyzedRecord;
-  addUploaded: (rows: { text: string; date?: string; category?: string }[], replace: boolean) => number;
+  addUploaded: (rows: { text: string; date?: string | undefined; category?: string | undefined }[], replace: boolean) => number;
   removeRecord: (id: string) => void;
   reset: () => void;
 }
@@ -63,7 +63,7 @@ export function CorpusProvider({ children }: { children: ReactNode }) {
     return { ...rec, result: analyzeText(text) };
   }, []);
 
-  const addUploaded = useCallback((rows: { text: string; date?: string; category?: string }[], replace: boolean) => {
+  const addUploaded = useCallback((rows: { text: string; date?: string | undefined; category?: string | undefined }[], replace: boolean) => {
     const today = new Date().toISOString().slice(0, 10);
     const stamp = Date.now().toString(36).toUpperCase();
     const recs = rows.map((r, i) => ({
